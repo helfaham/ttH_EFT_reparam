@@ -26,7 +26,7 @@ launch
 #  SPECIFY A PATH OR USE THE SET COMMAND LIKE THIS:
 # set sminputs 1 130 # modify 1/alpha_EW
 
-/home/elfaham/Downloads/tzw/working_dir/ttH/test_ttH_EFT/Cards/param_card.dat
+/home/elfaham/Downloads/tzw/working_dir/ttH_EFT_reparam/test_ttH_EFT/Cards/param_card.dat
 
 #************************************************************************
 # Manual:      https://cp3.irmp.ucl.ac.be/projects/madgraph/wiki/Reweight
