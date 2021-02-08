@@ -1,3 +1,3 @@
 import model dim6top_LO_UFO_each_coupling_order
-generate g g > t t~ h FCNC=0 DIM6=1 DIM6^2==1 DIM6_ctG^2==1 
+generate g g > t t~ h FCNC=0 DIM6=1 DIM6^2==1  
 output test_ttH_EFT
