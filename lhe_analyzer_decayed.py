@@ -56,6 +56,7 @@ if __name__ == '__main__':
     for line in ifile:
         if line[:1] == '#': continue
         if line.startswith('<scales'): continue
+
         if event_num_max > 0:
             if event_num > event_num_max: continue
 
@@ -70,7 +71,9 @@ if __name__ == '__main__':
             if not line.startswith('</event>'):
                 l0 = line.strip('\n')
                 if l0.startswith('<'): continue
+                if l0.startswith('   <'): continue
                 if len(l0.split()) == 6:
+            	    #print line
                     weight = float(line.split()[2])
                     #print weight
                     continue
@@ -89,11 +92,13 @@ if __name__ == '__main__':
 		    # for each particle in an event: extract four momentum
                     i_p4 = ROOT.TLorentzVector(lhep_px(p), lhep_py(p), lhep_pz(p), lhep_E(p))
 		   
-		    if lhep_status(p) == 1: # status = 1 -> final state particle
+                    #print abs(lhep_pdgID(p))
+		    if lhep_status(p) == 1 or lhep_status(p) !=1: # status = 1 -> final state particle
 
-			# e or mu
-                        if abs(lhep_pdgID(p)) == 25: 
+			# b or bbar
+                        if abs(lhep_pdgID(p)) == 5: 
                            higgs_p4 += i_p4
+                           #print higgs_p4
                            l_p4 = i_p4
 
 

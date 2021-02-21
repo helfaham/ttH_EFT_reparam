@@ -15,9 +15,12 @@ if __name__ == '__main__':
   
     main_dir = "/home/elfaham/Downloads/tzw/working_dir/ttH_EFT_reparam"
 
-    file_un = main_dir + "/unweighted.root"
-    file_re = main_dir + "/reweighted.root"
+    file_sm = main_dir + "/SM_tth_STXS.root"
+    file_un = main_dir + "/unweighted_cpt_STXS.root"
+    file_re = main_dir + "/reweighted_cpt_STXS.root"
 
+
+    ifile_sm = ROOT.TFile.Open(file_sm)
     ifile_un = ROOT.TFile.Open(file_un)
     ifile_re = ROOT.TFile.Open(file_re)
 
@@ -26,6 +29,7 @@ if __name__ == '__main__':
       'higgs_pt': ('pt_{higgs} [GeV]', 0, 1000),
     }
 
+    color_sm = 633  # red
     color_un = 1   # black
     color_re = 797  # orange
     color_ratio = 824 # green
@@ -37,10 +41,12 @@ if __name__ == '__main__':
 
         canvas = ROOT.TCanvas(histo_key, histo_key, 800, 725)
 
+        histo_sm = ifile_sm.Get(histo_key)
         histo_un = ifile_un.Get(histo_key)
         histo_re = ifile_re.Get(histo_key)
 
-        print("SM xsec:       %.4f pb" %(histo_un.GetSumOfWeights()))
+        print("SM xsec: %.4f pb" %(histo_sm.GetSumOfWeights()))
+        print("SM in reweighting xsec: %.4f pb" %(histo_un.GetSumOfWeights()))
         print("EFT xsec: %.4f pb" %(histo_re.GetSumOfWeights()))	
 
 	# histograms pad
@@ -61,11 +67,13 @@ if __name__ == '__main__':
         histo_un.SetStats(0)
         histo_un.SetLineColor(color_un)
         histo_un.SetLineWidth(3)
-	histo_un.GetYaxis().SetRangeUser(2e-6,.2)
+	histo_un.GetYaxis().SetRangeUser(2e-6, 2) #STXS
+	#histo_un.GetYaxis().SetRangeUser(2e-6,.2) 
         histo_un.GetYaxis().SetLabelSize(0.05)
 	histo_un.GetXaxis().SetTitle(histo_dc[histo_key][0])
         histo_un.GetXaxis().SetTitleSize(0.05)
-	histo_un.GetYaxis().SetTitle("d#sigma/dpT(H) [pb/10 GeV]")
+	histo_un.GetYaxis().SetTitle("d#sigma/dpT(H) [STXS]") #STXS
+	#histo_un.GetYaxis().SetTitle("d#sigma/dpT(H) [pb/10 GeV]")
         histo_un.GetYaxis().SetTitleSize(0.05)
 
 
@@ -76,9 +84,16 @@ if __name__ == '__main__':
         histo_re.SetLineColor(color_re)
         histo_re.SetLineWidth(3)
 
-        leg = ROOT.TLegend(.85,.55,.55,.75)
-        leg.AddEntry(histo_un, "SM","l")
-        leg.AddEntry(histo_re, "rwgt (EFT)","l")
+        histo_sm.Draw('hist,same')
+        histo_sm.SetStats(0)
+        histo_sm.SetLineColor(color_sm)
+        histo_sm.SetLineWidth(3)
+
+        leg = ROOT.TLegend(.95,.75,.75,.95) #STXS
+        #leg = ROOT.TLegend(.85,.55,.55,.75)
+        leg.AddEntry(histo_sm, "SM","l")
+        leg.AddEntry(histo_un, "unwgt(EFT cpt)","l")
+        leg.AddEntry(histo_re, "rwgt(EFT cpt)","l")
         leg.SetTextSize(.035)
         leg.Draw()
 
@@ -111,14 +126,14 @@ if __name__ == '__main__':
         ratio.GetYaxis().SetLabelOffset(0.01)
 	ratio.GetXaxis().SetTitle(histo_dc[histo_key][0])
         ratio.GetXaxis().SetTitleSize(0.1)
-	ratio.GetYaxis().SetTitle("SM / rwgt (EFT)")
+	ratio.GetYaxis().SetTitle("unwgt(EFT) / rwgt (EFT)")
         ratio.GetYaxis().SetTitleSize(0.1)
         ratio.GetYaxis().SetTitleOffset(0.7)
 
         ratio.SetTitle("")
 
         #leg2 = ROOT.TLegend(.6,.3,.9,.65)
-        #leg2.AddEntry(ratio, " SM / rwgt (EFT)","l")
+        #leg2.AddEntry(ratio, " unwgt(EFT) / rwgt (EFT)","l")
         #leg2.SetTextSize(0.065)
         #leg2.Draw()
 
@@ -126,6 +141,6 @@ if __name__ == '__main__':
 
 	
         #canvas.Write()
-	canvas.SaveAs("plot_" + histo_key + ".pdf")
+	canvas.SaveAs("./plots/plot_" + histo_key + ".pdf")
 
 
