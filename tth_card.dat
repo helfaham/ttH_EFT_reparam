@@ -1,0 +1,8 @@
+import model dim6top_LO_UFO
+#import model dim6top_LO_UFO_each_coupling_order
+define dprod=g u c d s b u~ c~ d~ s~ b~ a ve vm vt e- mu- ve~ vm~ vt~ e+ mu+ ta- ta+
+#generate p p > t t~ h FCNC=0 DIM6<=1, (t > w+ b DIM6<=1), (t~ > w- b~ DIM6<=1), h > b b~ DIM6<=1 @0 DIM6<=1
+#generate p p > t t~ h FCNC=0 DIM6<=1, (t > w+ b DIM6<=1, w+ > dprod dprod), (t~ > w- b~ DIM6<=1), h > b b~ DIM6<=1 @0 DIM6<=1
+generate p p > t t~ h FCNC=0 DIM6<=1, (t > w+ b DIM6<=1, w+ > dprod dprod), (t~ > w- b~ DIM6<=1, w- > dprod dprod), h > b b~ DIM6<=1 @0 DIM6<=1
+#set complex_mass_scheme True
+output tth_smeft
