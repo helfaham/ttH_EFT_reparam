@@ -27,8 +27,8 @@ if __name__ == '__main__':
     ifile_ctg = ROOT.TFile.Open(file_ctg)
     
     histo_dc = {
-      'higgs_pt': ('pt_{higgs} [GeV]', 0, 1000),
-      #'higgs_mass': ('mass_{higgs} [GeV]', 0, 500),
+      'higgs_pt': ('pt_{higgs} [GeV]', 0, 600),
+      #'higgs_mass': ('mass_{higgs} [GeV]', 0, 200),
     }
 
     color_sm = 633  # red
@@ -164,7 +164,7 @@ if __name__ == '__main__':
 
         leg2 = ROOT.TLegend(.95,.75,.75,.95) #STXS
         leg2.AddEntry(ratio_sm_zero, "cpt=0 ctg=0","l")
-        leg2.AddEntry(ratio_sm_cpt,  "cpt=1 ctg=1","l")
+        leg2.AddEntry(ratio_sm_cpt,  "cpt=1 ctg=0","l")
         leg2.AddEntry(ratio_sm_ctg, "cpt=0 ctg=1","l")
         leg2.SetTextSize(0.065)
         leg2.Draw()
