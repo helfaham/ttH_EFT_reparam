@@ -43,13 +43,15 @@ if __name__ == '__main__':
     event_num_max = -1
 
     ## define relevant histograms
-    xedges = [0,60,120,200,300,450,1000]
-    xbins = len(xedges)
-    runArray = array('d',xedges + [xedges[-1]+1])
-    #h_higgs_pt  = ROOT.TH1F('higgs_pt' , 'higgs_pt' , 100, 0, 1000)
-    h_higgs_pt  = ROOT.TH1F('higgs_pt' , 'higgs_pt' , xbins, runArray) 
+    #xedges = [0,60,120,200,300,450,1000] #for STXS
+    #xbins = len(xedges)
+    #runArray = array('d',xedges + [xedges[-1]+1])
+    h_higgs_pt  = ROOT.TH1F('higgs_pt' , 'higgs_pt' , 100, 0, 1000)
+    h_higgs_mass  = ROOT.TH1F('higgs_mass' , 'higgs_mass' , 100, 0, 500)
+    #h_higgs_pt  = ROOT.TH1F('higgs_pt' , 'higgs_pt' , xbins, runArray) 
     h_higgs_pt.Sumw2()
-  
+    h_higgs_mass.Sumw2()
+
     event_num, in_event = 0, False
 
     # reads the lhe and looks into the events
@@ -80,8 +82,6 @@ if __name__ == '__main__':
             else:
                 ### event analysis
 
-	        # define the four momentum of the dilepton pair. 
-
 		higgs_p4 = ROOT.TLorentzVector(0, 0, 0, 0)
 
                 for p in genp_ls:
@@ -89,9 +89,8 @@ if __name__ == '__main__':
 		    # for each particle in an event: extract four momentum
                     i_p4 = ROOT.TLorentzVector(lhep_px(p), lhep_py(p), lhep_pz(p), lhep_E(p))
 		   
-		    if lhep_status(p) == 1: # status = 1 -> final state particle
+		    if lhep_status(p) == 1: # status = 1 -> final state particle #the higgs is a final state here
 
-			# e or mu
                         if abs(lhep_pdgID(p)) == 25: 
                            higgs_p4 += i_p4
                            l_p4 = i_p4
@@ -99,9 +98,9 @@ if __name__ == '__main__':
 
                 	
                 # for each event: store the observables in the histograms
-
                 h_higgs_pt.Fill(higgs_p4.Pt(), weight) 
-
+                h_higgs_mass.Fill(higgs_p4.M(), weight)
+ 
                 in_event = False
                 continue
 
@@ -112,9 +111,11 @@ if __name__ == '__main__':
 
     # normalize histo
     h_higgs_pt.Scale(1./event_num)
+    h_higgs_mass.Scale(1./event_num)
     print("integrated weight: %.6f" %(h_higgs_pt.GetSumOfWeights()))
+    print("integrated weight: %.6f" %(h_higgs_mass.GetSumOfWeights()))
     print("file %s produced" %sys.argv[2])
 
     h_higgs_pt.Write()
-
+    h_higgs_mass.Write()
     ofile.Close()

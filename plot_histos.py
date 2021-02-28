@@ -15,9 +15,9 @@ if __name__ == '__main__':
   
     main_dir = "/home/elfaham/Downloads/tzw/working_dir/ttH_EFT_reparam"
 
-    file_sm = main_dir + "/SM_tth_STXS.root"
-    file_un = main_dir + "/unweighted_cpt_STXS.root"
-    file_re = main_dir + "/reweighted_cpt_STXS.root"
+    file_sm = main_dir + "/SM_tth_madspin.root"
+    file_un = main_dir + "/unweighted_cpt.root"
+    file_re = main_dir + "/reweighted_cpt.root"
 
 
     ifile_sm = ROOT.TFile.Open(file_sm)
@@ -27,6 +27,7 @@ if __name__ == '__main__':
     
     histo_dc = {
       'higgs_pt': ('pt_{higgs} [GeV]', 0, 1000),
+      #'higgs_mass': ('mass_{higgs} [GeV]', 0, 500),
     }
 
     color_sm = 633  # red

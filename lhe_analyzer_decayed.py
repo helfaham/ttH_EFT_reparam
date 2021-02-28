@@ -43,11 +43,13 @@ if __name__ == '__main__':
     event_num_max = -1
 
     ## define relevant histograms
-    xedges = [0,60,120,200,300,450,1000]
-    xbins = len(xedges)
-    runArray = array('d',xedges + [xedges[-1]+1])
-    #h_higgs_pt  = ROOT.TH1F('higgs_pt' , 'higgs_pt' , 100, 0, 1000)
-    h_higgs_pt  = ROOT.TH1F('higgs_pt' , 'higgs_pt' , xbins, runArray) 
+    #xedges = [0,60,120,200,300,450,1000] #for STXS
+    #xbins = len(xedges)
+    #runArray = array('d',xedges + [xedges[-1]+1])
+    h_higgs_mass  = ROOT.TH1F('higgs_mass' , 'higgs_mass' , 100, 0, 500)
+    h_higgs_pt  = ROOT.TH1F('higgs_pt' , 'higgs_pt' , 100, 0, 1000)
+    #h_higgs_pt  = ROOT.TH1F('higgs_pt' , 'higgs_pt' , xbins, runArray) 
+    h_higgs_mass.Sumw2()
     h_higgs_pt.Sumw2()
   
     event_num, in_event = 0, False
@@ -83,8 +85,7 @@ if __name__ == '__main__':
             else:
                 ### event analysis
 
-	        # define the four momentum of the dilepton pair. 
-
+	        # define the four momentum of the pair. 
 		higgs_p4 = ROOT.TLorentzVector(0, 0, 0, 0)
 
                 for p in genp_ls:
@@ -93,20 +94,19 @@ if __name__ == '__main__':
                     i_p4 = ROOT.TLorentzVector(lhep_px(p), lhep_py(p), lhep_pz(p), lhep_E(p))
 		   
                     #print abs(lhep_pdgID(p))
-		    if lhep_status(p) == 1 or lhep_status(p) !=1: # status = 1 -> final state particle
+		    if lhep_status(p) == 1: #or lhep_status(p) !=1: #the b is stable here 
 
-			# b or bbar
-                        if abs(lhep_pdgID(p)) == 5: 
-                           higgs_p4 += i_p4
-                           #print higgs_p4
-                           l_p4 = i_p4
+                        if abs(lhep_pdgID(p)) == 5:  #the b from the top decay is interfering
+                           if lhep_mother1(p) == 5 or lhep_mother2(p) == 5: #number of the mother in the lhe file not the pdg
+                              higgs_p4 += i_p4
+                              l_p4 = i_p4
 
 
                 	
                 # for each event: store the observables in the histograms
-
                 h_higgs_pt.Fill(higgs_p4.Pt(), weight) 
-
+                #if higgs_p4.Pt() < 30: indentation below to make it work
+                h_higgs_mass.Fill(higgs_p4.M(), weight) 
                 in_event = False
                 continue
 
@@ -117,9 +117,12 @@ if __name__ == '__main__':
 
     # normalize histo
     h_higgs_pt.Scale(1./event_num)
+    h_higgs_mass.Scale(1./event_num)
     print("integrated weight: %.6f" %(h_higgs_pt.GetSumOfWeights()))
+    print("integrated weight: %.6f" %(h_higgs_mass.GetSumOfWeights()))
     print("file %s produced" %sys.argv[2])
 
     h_higgs_pt.Write()
+    h_higgs_mass.Write()
 
     ofile.Close()

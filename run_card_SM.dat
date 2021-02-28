@@ -1,3 +1,0 @@
-import model dim6top_LO_UFO_each_coupling_order
-generate g g > t t~ h FCNC=0 DIM6=0   
-output test_ttH_SM
