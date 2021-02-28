@@ -15,15 +15,16 @@ if __name__ == '__main__':
   
     main_dir = "/home/elfaham/Downloads/tzw/working_dir/ttH_EFT_reparam"
 
-    file_sm = main_dir + "/SM_tth_madspin.root"
-    file_un = main_dir + "/unweighted_cpt.root"
-    file_re = main_dir + "/reweighted_cpt.root"
+    file_sm = main_dir + "/root_files/sm_tth.root"
+    file_zero = main_dir + "/root_files/smeft_tth_wilson_zero.root"
+    file_cpt = main_dir + "/root_files/smeft_tth_wilson_cpt.root"
+    file_ctg = main_dir + "/root_files/smeft_tth_wilson_ctg.root"
 
 
     ifile_sm = ROOT.TFile.Open(file_sm)
-    ifile_un = ROOT.TFile.Open(file_un)
-    ifile_re = ROOT.TFile.Open(file_re)
-
+    ifile_zero = ROOT.TFile.Open(file_zero)
+    ifile_cpt = ROOT.TFile.Open(file_cpt)
+    ifile_ctg = ROOT.TFile.Open(file_ctg)
     
     histo_dc = {
       'higgs_pt': ('pt_{higgs} [GeV]', 0, 1000),
@@ -31,9 +32,13 @@ if __name__ == '__main__':
     }
 
     color_sm = 633  # red
-    color_un = 1   # black
-    color_re = 797  # orange
-    color_ratio = 824 # green
+    color_zero = 1   # black
+    color_cpt = 797  # orange
+    color_ctg = 824  # green
+
+    color_sm_zero = 1 
+    color_sm_cpt = 797 
+    color_sm_ctg = 824 
 
 
     ROOT.gROOT.SetBatch()
@@ -43,12 +48,14 @@ if __name__ == '__main__':
         canvas = ROOT.TCanvas(histo_key, histo_key, 800, 725)
 
         histo_sm = ifile_sm.Get(histo_key)
-        histo_un = ifile_un.Get(histo_key)
-        histo_re = ifile_re.Get(histo_key)
+        histo_zero = ifile_zero.Get(histo_key)
+        histo_cpt = ifile_cpt.Get(histo_key)
+        histo_ctg = ifile_ctg.Get(histo_key)
 
-        print("SM xsec: %.4f pb" %(histo_sm.GetSumOfWeights()))
-        print("SM in reweighting xsec: %.4f pb" %(histo_un.GetSumOfWeights()))
-        print("EFT xsec: %.4f pb" %(histo_re.GetSumOfWeights()))	
+        print("sm: %.4f pb" %(histo_sm.GetSumOfWeights()))
+        print("smeft zero wilson: %.4f pb" %(histo_zero.GetSumOfWeights()))
+        print("smeft cpt wilson: %.4f pb" %(histo_cpt.GetSumOfWeights()))
+        print("smeft ctg wilson: %.4f pb" %(histo_ctg.GetSumOfWeights()))
 
 	# histograms pad
 	 
@@ -62,48 +69,58 @@ if __name__ == '__main__':
 	pad1.cd()
 
 
-        # EFT histograms separately
-
-        histo_un.Draw('hist')
-        histo_un.SetStats(0)
-        histo_un.SetLineColor(color_un)
-        histo_un.SetLineWidth(3)
-	histo_un.GetYaxis().SetRangeUser(2e-6, 2) #STXS
-	#histo_un.GetYaxis().SetRangeUser(2e-6,.2) 
-        histo_un.GetYaxis().SetLabelSize(0.05)
-	histo_un.GetXaxis().SetTitle(histo_dc[histo_key][0])
-        histo_un.GetXaxis().SetTitleSize(0.05)
-	histo_un.GetYaxis().SetTitle("d#sigma/dpT(H) [STXS]") #STXS
-	#histo_un.GetYaxis().SetTitle("d#sigma/dpT(H) [pb/10 GeV]")
-        histo_un.GetYaxis().SetTitleSize(0.05)
-
-
-	histo_un.SetTitle("")
-   
-        histo_re.Draw('hist,same')
-        histo_re.SetStats(0)
-        histo_re.SetLineColor(color_re)
-        histo_re.SetLineWidth(3)
-
-        histo_sm.Draw('hist,same')
+        histo_sm.Draw('hist')
         histo_sm.SetStats(0)
         histo_sm.SetLineColor(color_sm)
         histo_sm.SetLineWidth(3)
+	#histo_sm.GetYaxis().SetRangeUser(2e-6, 2) #STXS
+	histo_sm.GetYaxis().SetRangeUser(2e-6,.2) 
+        histo_sm.GetYaxis().SetLabelSize(0.05)
+	histo_sm.GetXaxis().SetTitle(histo_dc[histo_key][0])
+        histo_sm.GetXaxis().SetTitleSize(0.05)
+	#histo_sm.GetYaxis().SetTitle("d#sigma/dpT(H) [STXS]") #STXS
+	histo_sm.GetYaxis().SetTitle("d#sigma/dpT(H)")
+        histo_sm.GetYaxis().SetTitleSize(0.05)
+
+
+	histo_sm.SetTitle("")
+   
+        histo_zero.Draw('hist,same')
+        histo_zero.SetStats(0)
+        histo_zero.SetLineColor(color_zero)
+        histo_zero.SetLineWidth(3)
+
+        histo_cpt.Draw('hist,same')
+        histo_cpt.SetStats(0)
+        histo_cpt.SetLineColor(color_cpt)
+        histo_cpt.SetLineWidth(3)
+
+        histo_ctg.Draw('hist,same')
+        histo_ctg.SetStats(0)
+        histo_ctg.SetLineColor(color_ctg)
+        histo_ctg.SetLineWidth(3)
 
         leg = ROOT.TLegend(.95,.75,.75,.95) #STXS
         #leg = ROOT.TLegend(.85,.55,.55,.75)
-        leg.AddEntry(histo_sm, "SM","l")
-        leg.AddEntry(histo_un, "unwgt(EFT cpt)","l")
-        leg.AddEntry(histo_re, "rwgt(EFT cpt)","l")
+        leg.AddEntry(histo_sm, "sm","l")
+        leg.AddEntry(histo_zero, "smeft cpt=0 ctg=0","l")
+        leg.AddEntry(histo_cpt, "smeft cpt=1 ctg=0","l")
+        leg.AddEntry(histo_ctg, "smeft cpt=0 ctg=1","l")
         leg.SetTextSize(.035)
         leg.Draw()
 
         canvas.cd()
 
-        ratio = histo_un.Clone()
-        ratio.Divide(histo_re)
+        ratio_sm_zero = histo_sm.Clone()
+        ratio_sm_zero.Divide(histo_zero)
 
-        # lower pad: ratio model/EFT tot
+        ratio_sm_cpt = histo_sm.Clone()
+        ratio_sm_cpt.Divide(histo_cpt)
+
+        ratio_sm_ctg = histo_sm.Clone()
+        ratio_sm_ctg.Divide(histo_ctg)
+
+        # lower pad
         pad2 = ROOT.TPad("histo_ratio","histo_ratio",0., 0.0 , 1, 0.35)
         pad2.SetTopMargin(0.0)
         pad2.SetLeftMargin(0.15)
@@ -115,28 +132,42 @@ if __name__ == '__main__':
         pad2.cd()
 
 
-        ratio.Draw('hist')
-        ratio.SetStats(0)
-        ratio.SetLineColor(color_ratio)
-        ratio.SetLineStyle(1)
-        ratio.SetLineWidth(3)
-        ratio.GetYaxis().SetRangeUser(.8,2.5)
-        ratio.GetXaxis().SetLabelSize(0.1)
-        ratio.GetXaxis().SetLabelOffset(0.01)
-        ratio.GetYaxis().SetLabelSize(0.1)
-        ratio.GetYaxis().SetLabelOffset(0.01)
-	ratio.GetXaxis().SetTitle(histo_dc[histo_key][0])
-        ratio.GetXaxis().SetTitleSize(0.1)
-	ratio.GetYaxis().SetTitle("unwgt(EFT) / rwgt (EFT)")
-        ratio.GetYaxis().SetTitleSize(0.1)
-        ratio.GetYaxis().SetTitleOffset(0.7)
+        ratio_sm_zero.Draw('hist')
+        ratio_sm_zero.SetStats(0)
+        ratio_sm_zero.SetLineColor(color_sm_zero)
+        ratio_sm_zero.SetLineStyle(1)
+        ratio_sm_zero.SetLineWidth(3)
+        ratio_sm_zero.GetYaxis().SetRangeUser(-1.0,3.0)
+        ratio_sm_zero.GetXaxis().SetLabelSize(0.1)
+        ratio_sm_zero.GetXaxis().SetLabelOffset(0.01)
+        ratio_sm_zero.GetYaxis().SetLabelSize(0.1)
+        ratio_sm_zero.GetYaxis().SetLabelOffset(0.01)
+	ratio_sm_zero.GetXaxis().SetTitle(histo_dc[histo_key][0])
+        ratio_sm_zero.GetXaxis().SetTitleSize(0.1)
+	ratio_sm_zero.GetYaxis().SetTitle("sm/smeft")
+        ratio_sm_zero.GetYaxis().SetTitleSize(0.1)
+        ratio_sm_zero.GetYaxis().SetTitleOffset(0.7)
 
-        ratio.SetTitle("")
+        ratio_sm_zero.SetTitle("")
 
-        #leg2 = ROOT.TLegend(.6,.3,.9,.65)
-        #leg2.AddEntry(ratio, " unwgt(EFT) / rwgt (EFT)","l")
-        #leg2.SetTextSize(0.065)
-        #leg2.Draw()
+
+        ratio_sm_cpt.Draw('hist,same')
+        ratio_sm_cpt.SetLineColor(color_sm_cpt)
+        ratio_sm_cpt.SetLineStyle(1)
+        ratio_sm_cpt.SetLineWidth(3)
+
+        ratio_sm_ctg.Draw('hist,same')
+        ratio_sm_ctg.SetLineColor(color_sm_ctg)
+        ratio_sm_ctg.SetLineStyle(1)
+        ratio_sm_ctg.SetLineWidth(3)
+
+
+        leg2 = ROOT.TLegend(.95,.75,.75,.95) #STXS
+        leg2.AddEntry(ratio_sm_zero, "cpt=0 ctg=0","l")
+        leg2.AddEntry(ratio_sm_cpt,  "cpt=1 ctg=1","l")
+        leg2.AddEntry(ratio_sm_ctg, "cpt=0 ctg=1","l")
+        leg2.SetTextSize(0.065)
+        leg2.Draw()
 
         canvas.cd()
 
