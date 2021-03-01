@@ -111,14 +111,14 @@ if __name__ == '__main__':
 
         canvas.cd()
 
-        ratio_sm_zero = histo_sm.Clone()
-        ratio_sm_zero.Divide(histo_zero)
+        ratio_zero_sm = histo_zero.Clone()
+        ratio_zero_sm.Divide(histo_sm)
 
-        ratio_sm_cpt = histo_sm.Clone()
-        ratio_sm_cpt.Divide(histo_cpt)
+        ratio_cpt_sm = histo_cpt.Clone()
+        ratio_cpt_sm.Divide(histo_sm)
 
-        ratio_sm_ctg = histo_sm.Clone()
-        ratio_sm_ctg.Divide(histo_ctg)
+        ratio_ctg_sm = histo_ctg.Clone()
+        ratio_ctg_sm.Divide(histo_sm)
 
         # lower pad
         pad2 = ROOT.TPad("histo_ratio","histo_ratio",0., 0.0 , 1, 0.35)
@@ -132,40 +132,40 @@ if __name__ == '__main__':
         pad2.cd()
 
 
-        ratio_sm_zero.Draw('hist')
-        ratio_sm_zero.SetStats(0)
-        ratio_sm_zero.SetLineColor(color_sm_zero)
-        ratio_sm_zero.SetLineStyle(1)
-        ratio_sm_zero.SetLineWidth(3)
-        ratio_sm_zero.GetYaxis().SetRangeUser(-1.0,3.0)
-        ratio_sm_zero.GetXaxis().SetLabelSize(0.1)
-        ratio_sm_zero.GetXaxis().SetLabelOffset(0.01)
-        ratio_sm_zero.GetYaxis().SetLabelSize(0.1)
-        ratio_sm_zero.GetYaxis().SetLabelOffset(0.01)
-	ratio_sm_zero.GetXaxis().SetTitle(histo_dc[histo_key][0])
-        ratio_sm_zero.GetXaxis().SetTitleSize(0.1)
-	ratio_sm_zero.GetYaxis().SetTitle("sm/smeft")
-        ratio_sm_zero.GetYaxis().SetTitleSize(0.1)
-        ratio_sm_zero.GetYaxis().SetTitleOffset(0.7)
+        ratio_zero_sm.Draw('hist')
+        ratio_zero_sm.SetStats(0)
+        ratio_zero_sm.SetLineColor(color_sm_zero)
+        ratio_zero_sm.SetLineStyle(1)
+        ratio_zero_sm.SetLineWidth(3)
+        ratio_zero_sm.GetYaxis().SetRangeUser(-1.0,9.0)
+        ratio_zero_sm.GetXaxis().SetLabelSize(0.1)
+        ratio_zero_sm.GetXaxis().SetLabelOffset(0.01)
+        ratio_zero_sm.GetYaxis().SetLabelSize(0.1)
+        ratio_zero_sm.GetYaxis().SetLabelOffset(0.01)
+	ratio_zero_sm.GetXaxis().SetTitle(histo_dc[histo_key][0])
+        ratio_zero_sm.GetXaxis().SetTitleSize(0.1)
+	ratio_zero_sm.GetYaxis().SetTitle("smeft/sm")
+        ratio_zero_sm.GetYaxis().SetTitleSize(0.1)
+        ratio_zero_sm.GetYaxis().SetTitleOffset(0.7)
 
-        ratio_sm_zero.SetTitle("")
+        ratio_zero_sm.SetTitle("")
 
 
-        ratio_sm_cpt.Draw('hist,same')
-        ratio_sm_cpt.SetLineColor(color_sm_cpt)
-        ratio_sm_cpt.SetLineStyle(1)
-        ratio_sm_cpt.SetLineWidth(3)
+        ratio_cpt_sm.Draw('hist,same')
+        ratio_cpt_sm.SetLineColor(color_sm_cpt)
+        ratio_cpt_sm.SetLineStyle(1)
+        ratio_cpt_sm.SetLineWidth(3)
 
-        ratio_sm_ctg.Draw('hist,same')
-        ratio_sm_ctg.SetLineColor(color_sm_ctg)
-        ratio_sm_ctg.SetLineStyle(1)
-        ratio_sm_ctg.SetLineWidth(3)
+        ratio_ctg_sm.Draw('hist,same')
+        ratio_ctg_sm.SetLineColor(color_sm_ctg)
+        ratio_ctg_sm.SetLineStyle(1)
+        ratio_ctg_sm.SetLineWidth(3)
 
 
         leg2 = ROOT.TLegend(.95,.75,.75,.95) #STXS
-        leg2.AddEntry(ratio_sm_zero, "cpt=0 ctg=0","l")
-        leg2.AddEntry(ratio_sm_cpt,  "cpt=1 ctg=0","l")
-        leg2.AddEntry(ratio_sm_ctg, "cpt=0 ctg=1","l")
+        leg2.AddEntry(ratio_zero_sm, "cpt=0 ctg=0","l")
+        leg2.AddEntry(ratio_cpt_sm,  "cpt=1 ctg=0","l")
+        leg2.AddEntry(ratio_ctg_sm, "cpt=0 ctg=1","l")
         leg2.SetTextSize(0.065)
         leg2.Draw()
 
