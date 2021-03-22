@@ -27,7 +27,7 @@ if __name__ == '__main__':
     ifile_ctg = ROOT.TFile.Open(file_ctg)
     
     histo_dc = {
-      'higgs_pt': ('pt_{higgs} [GeV]', 0, 600),
+      'higgs_pt': ('pt_{higgs} [GeV]', 0, 800),
       #'higgs_mass': ('mass_{higgs} [GeV]', 0, 200),
     }
 

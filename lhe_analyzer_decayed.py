@@ -47,7 +47,7 @@ if __name__ == '__main__':
     #xbins = len(xedges)
     #runArray = array('d',xedges + [xedges[-1]+1])
     h_higgs_mass  = ROOT.TH1F('higgs_mass' , 'higgs_mass' , 25, 0, 200)
-    h_higgs_pt  = ROOT.TH1F('higgs_pt' , 'higgs_pt' , 100, 0, 800)
+    h_higgs_pt  = ROOT.TH1F('higgs_pt' , 'higgs_pt' , 50, 0, 800)
     #h_higgs_pt  = ROOT.TH1F('higgs_pt' , 'higgs_pt' , xbins, runArray) 
     h_higgs_mass.Sumw2()
     h_higgs_pt.Sumw2()

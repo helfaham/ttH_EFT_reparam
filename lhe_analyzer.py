@@ -46,7 +46,7 @@ if __name__ == '__main__':
     #xedges = [0,60,120,200,300,450,1000] #for STXS
     #xbins = len(xedges)
     #runArray = array('d',xedges + [xedges[-1]+1])
-    h_higgs_pt  = ROOT.TH1F('higgs_pt' , 'higgs_pt' , 100, 0, 800)
+    h_higgs_pt  = ROOT.TH1F('higgs_pt' , 'higgs_pt' , 50, 0, 800)
     h_higgs_mass  = ROOT.TH1F('higgs_mass' , 'higgs_mass' , 25, 0, 200)
     #h_higgs_pt  = ROOT.TH1F('higgs_pt' , 'higgs_pt' , xbins, runArray) 
     h_higgs_pt.Sumw2()
@@ -96,7 +96,6 @@ if __name__ == '__main__':
                            l_p4 = i_p4
 
 
-                	
                 # for each event: store the observables in the histograms
                 h_higgs_pt.Fill(higgs_p4.Pt(), weight) 
                 h_higgs_mass.Fill(higgs_p4.M(), weight)
