@@ -112,6 +112,8 @@ DM_1 = 6:onMode = off
 DM_2 = 6:onPosIfAny = 24 5
 DM_3 = -6:onMode = off
 DM_4 = 6:onNegIfAny = -24 -5
+DM_5 = 25:onMode= off
+DM_6 = 25:onPosIfAny = 5 -5
 #***********************************************************************
 # Extra libraries/analyses                                             *
 #***********************************************************************
@@ -122,7 +124,7 @@ DM_4 = 6:onNegIfAny = -24 -5
 # Remember that if your analysis uses hbook or is in the HwU format,   *
 # you must also add to hbook.o or HwU.o to the ANALYSE list as well.   *
 #***********************************************************************
-EXTRALIBS    = fastjet dl z pythia8 stdc++ stdhep Fmcfio     # Extra-libraries (not LHAPDF) 
+EXTRALIBS    = fastjet dl z pythia8 stdc++  # Extra-libraries (not LHAPDF) 
                                  # Default: "stdhep Fmcfio"
                                  # PYTHIA > 8.200 may require library dl
 EXTRAPATHS   = ../lib            # Path to the extra-libraries

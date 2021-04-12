@@ -1,0 +1,2 @@
+#!/bin/bash
+./tth_smeft_fo_pythia/bin/internal/histograms.py ./tth_smeft_fo/Events/run_16/MADatNLO.HwU ./tth_smeft_fo/Events/run_14/MADatNLO.HwU ./tth_smeft_fo/Events/run_15/MADatNLO.HwU ./tth_smeft_fo_pythia/Events/run_10/MADatNLO.HwU ./tth_smeft_fo_pythia/Events/run_11/MADatNLO.HwU ./tth_smeft_fo_pythia/Events/run_12/MADatNLO.HwU --out=./plot_test --no_scale --no_pdf --no_stat --rebin=2 --keep_all_weights

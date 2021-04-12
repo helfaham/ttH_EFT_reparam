@@ -1,0 +1,4 @@
+import model loop_sm 
+define dprod=g u c d s b u~ c~ d~ s~ b~ a ve vm vt e- mu- ve~ vm~ vt~ e+ mu+ ta- ta+
+generate p p > t t~ h QED=1 QCD=2 [QCD] 
+output tth_sm_fo
