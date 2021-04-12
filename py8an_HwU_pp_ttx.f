@@ -42,8 +42,8 @@ c     It is in general a good idea to keep the same title for the
 c     same observable (if they use the same range) and differentiate
 c     them only using the type suffix.
 c
-      character*8 HwUtype(2)
-      data HwUtype/'|T@NOCUT','|T@CUT  '/
+      character*8 HwUtype(1)
+      data HwUtype/''/
       integer nwgt_analysis
       common/c_analysis/nwgt_analysis
       character*(wgts_info_len) weights_info(max_weight_shower)
@@ -59,8 +59,8 @@ c Set method for error estimation to '0', i.e., use Poisson statistics
 c for the uncertainty estimate
       call set_error_estimation(0)
       nwgt_analysis=nwgt
-      do i=1,2
-       l=(i-1)*20
+      do i=1,1
+       l=(i-1)*21
        call HwU_book(l+ 1,'tt pt            '//HwUtype(i),
      &                                                 50,0.d0,100.d0)
        call HwU_book(l+ 2,'tt log[pt]       '//HwUtype(i),98,0.1d0,5.d0)
@@ -85,8 +85,8 @@ c for the uncertainty estimate
      &                                                   82,-4.d0,0.1d0)
        call HwU_book(l+18,'tt pt zoomout    '//HwUtype(i),96,80.d0,2000.d0)
        call HwU_book(l+19,'tb pt zoomout    '//HwUtype(i),100,400.d0,2400.d0)
-c       call HwU_book(l+20,'t pt  zoomout    '//HwUtype(i),100,400.d0,2400.d0)
-       call HwU_book(l+20,'higgs pT         '//HwUtype(i),100,0.d0,500.d0)
+       call HwU_book(l+20,'t pt  zoomout    '//HwUtype(i),100,400.d0,2400.d0)
+       call HwU_book(l+21,'higgs pT         '//HwUtype(i),100,0.d0,500.d0)
       enddo
  999  END
 
@@ -119,7 +119,8 @@ C----------------------------------------------------------------------
       DOUBLE PRECISION HWVDOT,PSUM(4)
       INTEGER ICHSUM,ICHINI,IHEP
       LOGICAL DIDSOF,flcuts,siq1flag,siq2flag,ddflag
-      INTEGER ID,ID1,IST,IQ1,IQ2,IT1,IT2,ITH,ILP,INU,IBQ,ILM,INB,IBB,IJ 
+      INTEGER ID,ID1,IST,IQ1,IQ2,IT1,IT2,ITH,ILP,INU,IBQ,ILM,INB,IBB,IJ
+      INTEGER ITQB,ITQBbar 
       DOUBLE PRECISION YCUT,PTCUT,ptlp,ylp,getrapidity,ptnu,ynu,
      # ptbq,ybq,ptlm,ylm,ptnb,ynb,ptbb,ybb,ptbqbb,dphibqbb,
      # getdelphi,xmbqbb,getinvm,ptlplm,dphilplm,xmlplm,ptbqlm,
@@ -128,9 +129,9 @@ C----------------------------------------------------------------------
      # etaq1,getpseudorap,etaq2,azi,azinorm,qqm,dr,yqq
 
       DOUBLE PRECISION XPTQ(5),XPTB(5),XPLP(5),XPNU(5),XPBQ(5),XPLM(5),
-     # XPNB(5),XPBB(5),XH(5) !HF added XH
+     # XPNB(5),XPBB(5),XH(5),XQB(5),XQBbar(5) !HF added XH and later..
       DOUBLE PRECISION YPBQBB(4),YPLPLM(4),YPBQLM(4),YPBBLP(4),
-     # YPBQNB(4),YPBBNU(4),YPTQTB(4)
+     # YPBQNB(4),YPBBNU(4),YPTQTB(4),HP(4) !HF added HP
       REAL*8 PI
       PARAMETER (PI=3.14159265358979312D0)
       REAL*8 WWW0
@@ -168,6 +169,8 @@ C EFFECT, SO THROW THE EVENT AWAY
       IQ1=0
       IQ2=0
       IH=0
+      IQB=0
+      IQBbar=0
       DO 100 IHEP=1,NHEP
 C UNCOMMENT THE FOLLOWING WHEN REMOVING THE CHECK ON MOMENTUM 
 C        IF(IQ1*IQ2.EQ.1) GOTO 11
@@ -184,6 +187,12 @@ C FOUND AN ANTITOP; KEEP ONLY THE FIRST ON RECORD
         ELSEIF(ID1.EQ.25)THEN !HF
           IH=IH+1 !HF
           ITH=IHEP !HF
+        ELSEIF(ID1.EQ.5)THEN !HF
+          IQB=IQB+1 !HF
+          ITQB=IHEP !HF
+        ELSEIF(ID1.EQ.-5)THEN !HF
+          IQBbar=IQBbar+1 !HF
+          ITQBbar=IHEP !HF
         ENDIF 
   100 CONTINUE
       IF(IQ1*IQ2.EQ.0)THEN
@@ -193,9 +202,12 @@ C FOUND AN ANTITOP; KEEP ONLY THE FIRST ON RECORD
          XPTQ(IJ)=PHEP(IJ,IT1)
          XPTB(IJ)=PHEP(IJ,IT2)
          XH(IJ)=PHEP(IJ,ITH) !HF
+c         XQB=PHEP(IJ,ITQB) !HF needs a turn on of certain showering parameters
+c         XQBbar=PHEP(IJ,ITQBbar) !HF
       ENDDO
       DO IJ=1,4
          YPTQTB(IJ)=XPTQ(IJ)+XPTB(IJ)
+c         HP(IJ)=XQB(IJ)+XQBbar(IJ)
       ENDDO
 
 C FILL THE HISTOS
@@ -204,7 +216,8 @@ C FILL THE HISTOS
 C
       ptq1 = dsqrt(xptq(1)**2+xptq(2)**2)
       ptq2 = dsqrt(xptb(1)**2+xptb(2)**2)
-      pth = dsqrt(xh(1)**2+xh(2)**2) !HF
+      pth = dsqrt(xh(1)**2+xh(2)**2) !HF when you take the higgs momentum directly
+c      pth = dsqrt(hp(1)**2+hp(2)**2) !HF when you take the momentum of two b quarks
       ptg = dsqrt(yptqtb(1)**2+yptqtb(2)**2)
       yq1=getrapidity(xptq(4),xptq(3))
       yq2=getrapidity(xptb(4),xptb(3))
@@ -238,42 +251,42 @@ c-------------------------------------------------------------
       if(ptq2.gt.0) call HwU_fill(l+7,log10(ptq2),WWW)
       call HwU_fill(l+15,yq2,WWW)
       call HwU_fill(l+8,ptq1,WWW)
-c      call HwU_fill(l+20,ptq1,WWW)
+      call HwU_fill(l+20,ptq1,WWW)
       if(ptq1.gt.0) call HwU_fill(l+9,log10(ptq1),WWW)
       call HwU_fill(l+16,yq1,WWW)
-      call HwU_fill(l+20,pth,WWW) !HF
+      call HwU_fill(l+21,pth,WWW) !HF
 c
 c***************************************************** with cuts
 c
-      l=l+20
+c      l=l+21
 c
-      if(ddflag)then
-         call HwU_fill(l+20,pth,WWW) !HF
-         call HwU_fill(l+1,ptg,WWW)
-         call HwU_fill(l+18,ptg,WWW)
-         if(ptg.gt.0) call HwU_fill(l+2,log10(ptg),WWW)
-         call HwU_fill(l+3,qqm,WWW)
-         call HwU_fill(l+4,azi,WWW)
-         call HwU_fill(l+13,azi,WWW)
-         if(azinorm.gt.0) call HwU_fill(l+17,log10(azinorm),WWW)
-         call HwU_fill(l+5,dr,WWW)
-         call HwU_fill(l+14,dr,WWW)
-         call HwU_fill(l+10,etaq1-etaq2,WWW)
-         call HwU_fill(l+11,yqq,WWW)
-         call HwU_fill(l+12,yq1-yq2,WWW)
-      endif
-      if(abs(yq2).lt.ycut)then
-         call HwU_fill(l+6,ptq2,WWW)
-         call HwU_fill(l+19,ptq2,WWW)
-         if(ptq2.gt.0) call HwU_fill(l+7,log10(ptq2),WWW)
-      endif
-      if(ptq2.gt.ptcut)call HwU_fill(l+15,yq2,WWW)
-      if(abs(yq1).lt.ycut)then
-         call HwU_fill(l+8,ptq1,WWW)
+c      if(ddflag)then
+c         call HwU_fill(l+21,pth,WWW) !HF
+c         call HwU_fill(l+1,ptg,WWW)
+c         call HwU_fill(l+18,ptg,WWW)
+c         if(ptg.gt.0) call HwU_fill(l+2,log10(ptg),WWW)
+c         call HwU_fill(l+3,qqm,WWW)
+c         call HwU_fill(l+4,azi,WWW)
+c         call HwU_fill(l+13,azi,WWW)
+c         if(azinorm.gt.0) call HwU_fill(l+17,log10(azinorm),WWW)
+c         call HwU_fill(l+5,dr,WWW)
+c         call HwU_fill(l+14,dr,WWW)
+c         call HwU_fill(l+10,etaq1-etaq2,WWW)
+c         call HwU_fill(l+11,yqq,WWW)
+c         call HwU_fill(l+12,yq1-yq2,WWW)
+c      endif
+c      if(abs(yq2).lt.ycut)then
+c         call HwU_fill(l+6,ptq2,WWW)
+c         call HwU_fill(l+19,ptq2,WWW)
+c         if(ptq2.gt.0) call HwU_fill(l+7,log10(ptq2),WWW)
+c      endif
+c      if(ptq2.gt.ptcut)call HwU_fill(l+15,yq2,WWW)
+c      if(abs(yq1).lt.ycut)then
+c         call HwU_fill(l+8,ptq1,WWW)
 c         call HwU_fill(l+20,ptq1,WWW)
-         if(ptq1.gt.0) call HwU_fill(l+9,log10(ptq1),WWW)
-      endif
-      if(ptq1.gt.ptcut)call HwU_fill(l+16,yq1,WWW)
+c         if(ptq1.gt.0) call HwU_fill(l+9,log10(ptq1),WWW)
+c      endif
+c      if(ptq1.gt.ptcut)call HwU_fill(l+16,yq1,WWW)
       call HwU_add_points
  999  return
       end
