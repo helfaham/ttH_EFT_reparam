@@ -17,16 +17,15 @@
 # ENTER YOUR COMMANDS BELOW. 
 #************************************************************************
 
-change mode LO    # Define type of Reweighting. For LO sample this command
+change mode NLO    # Define type of Reweighting. For LO sample this command
                    # has no effect since only "LO" mode is allowed.
-change model /home/elfaham/Downloads/tzw/working_dir/3.0.3-betternlops/models/dim6top_LO_UFO_each_coupling_order                   
-change process g g > t t~ h FCNC=0 DIM6=1  
+change model /home/elfaham/Downloads/tzw/working_dir/3.0.3-betternlops/models/SMEFTatNLO-NLO                   
+change process p p > t t~ h QED=1 QCD=2 NP=2 [QCD]  
 change output 2.0 
 launch
 #  SPECIFY A PATH OR USE THE SET COMMAND LIKE THIS:
 # set sminputs 1 130 # modify 1/alpha_EW
-
-/home/elfaham/Downloads/tzw/working_dir/ttH_EFT_reparam/test_ttH_EFT/Cards/param_card.dat
+/home/elfaham/Downloads/tzw/working_dir/ttH_EFT_reparam/tth_smeft_fo_NEW/Cards/param_card.dat
 
 #************************************************************************
 # Manual:      https://cp3.irmp.ucl.ac.be/projects/madgraph/wiki/Reweight
